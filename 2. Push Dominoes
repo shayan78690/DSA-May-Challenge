@@ -1,0 +1,55 @@
+class Solution {
+
+    public void doubleDominoPush(int start, int end, StringBuilder sb) {
+        while (start < end) {
+            sb.setCharAt(start++, 'R');
+            sb.setCharAt(end--, 'L');
+        }
+    }
+
+    public void leftDominoPush(int start, int end, StringBuilder sb) {
+        while (start <= end) {
+            sb.setCharAt(start++, 'L');
+        }
+    }
+
+    public void rightDominoPush(int start, int end, StringBuilder sb) {
+        while (start <= end) {
+            sb.setCharAt(start++, 'R');
+        }
+    }
+
+    public String pushDominoes(String dominoes) {
+        int n = dominoes.length();
+        int last_L = -1;
+        int last_R = -1;
+        StringBuilder sb = new StringBuilder(dominoes);
+
+        for (int pos = 0; pos < n; pos++) {
+            char ch = sb.charAt(pos);
+
+            if (ch == 'L') {
+                if (last_R > last_L) {
+                    doubleDominoPush(last_R + 1, pos - 1, sb);
+                } else {
+                    leftDominoPush(last_L + 1, pos - 1, sb);
+                }
+                last_L = pos;
+            }
+
+            else if (ch == 'R') {
+                if (last_R > last_L) {
+                    rightDominoPush(last_R + 1, pos - 1, sb);
+                }
+                last_R = pos;
+            }
+        }
+
+        // Any remaining dominoes after the last 'R'
+        if (last_R > last_L) {
+            rightDominoPush(last_R + 1, n - 1, sb);
+        }
+
+        return sb.toString();
+    }
+}
